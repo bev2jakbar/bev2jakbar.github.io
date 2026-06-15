@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('images/20260331_083814.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+
+        /* Overlay gelap agar form lebih terbaca */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 40px 35px;
+            width: 380px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 10px;
+            
+        }
+        
+        .logo.img {
+            width: 100px;
+            height: auto;
+            border-radius: 100%;
+            
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .login-container .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            outline: none;
+            height: 48px;
+            box-sizing: border-box;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #1a73e8;
+        }
+
+        /* Style khusus untuk input username (tanpa wrapper) agar sama */
+        #username {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            outline: none;
+            height: 48px;
+            box-sizing: border-box;
+        }
+
+        #username:focus {
+            border-color: #1a73e8;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #888;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s ease;
+            width: 30px;
+            height: 30px;
+        }
+
+        .toggle-password:hover {
+            color: #333;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            margin-top: 10px;
+            height: 48px;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+
+        .error-message {
+            background-color: #ffe6e6;
+            color: #d32f2f;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #ffcccc;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .splash-screen.show {
+            display: flex;
+        }
+
+        .splash-screen .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .splash-screen h1 {
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .splash-screen p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .splash-screen .loading-text {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                width: 90%;
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="logo">🙋</div>
+        <h1>Bev 2 JakBar</h1>
+        <p>Selamat Datang!</p>
+        <div class="spinner"></div>
+        <div class="loading-text">Mengalihkan ke Halaman Selanjutnya...</div>
+    </div>
+
+    <!-- Form Login -->
+    <div class="login-container">
+        <div class="logo-container">
+            <img src="images/bv2.png" alt="Logo Perusahaan" class="logo-img">
+        </div>
+        <h2>Login</h2>
+        <p class="subtitle">Masuk ke sistem Bev2 Jakbar</p>
+
+        <div id="errorMessage" class="error-message">
+            Username atau password salah!
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                    <button type="button" class="toggle-password" id="togglePassword" aria-label="Lihat password">
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn">Masuk</button>
+        </form>
+    </div>
+
+    <script>
+        // Toggle show/hide password
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+
+        // Handle login form
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Data user yang valid
+            const validUsers = [
+                { username: 'leader', password: 'leader1234' },
+                { username: 'spgema', password: 'ema1234' },
+                { username: 'spgwati', password: 'wati1234' }
+            ];
+
+            // Cek kecocokan username dan password
+            const user = validUsers.find(user => 
+                user.username === username && user.password === password
+            );
+
+            if (user) {
+                errorMessage.classList.remove('show');
+                
+                // Tampilkan splash screen
+                const splashScreen = document.getElementById('splashScreen');
+                splashScreen.classList.add('show');
+                
+                // Redirect setelah 3 detik
+                setTimeout(function() {
+                    window.location.href = 'https://drive.google.com/drive/folders/12_-09tlU6Uttmd1s4dJYEovIkLSlB7Aj';
+                }, 3000);
+            } else {
+                errorMessage.classList.add('show');
+                // Reset input password
+                document.getElementById('password').value = '';
+                document.getElementById('password').setAttribute('type', 'password');
+                document.getElementById('togglePassword').textContent = '👁️';
+            }
+        });
+    </script>
+</body>
+</html>
