@@ -1,0 +1,749 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEVERAGE 2 — Laporan &amp; Branding</title>
+<style>
+  /* ---------- Reset & Base ---------- */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --header-bg: #0a0a0a;
+    --header-bar: #111827;
+    --red: #e11d2a;
+    --red-dark: #b9101c;
+    --muted: #6b7280;
+    --text: #1f2937;
+    --border: #e5e7eb;
+    --soft: #f9fafb;
+    --folder: #f6c651;
+    --folder-dark: #d99c1f;
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: #fff;
+    font-size: 14px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar {
+    background: var(--header-bg);
+    color: #fff;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .logo {
+    font-family: "Impact", "Arial Black", sans-serif;
+    font-style: italic;
+    font-weight: 900;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: #fff;
+    line-height: 1;
+    user-select: none;
+  }
+  .logo .num { display: inline-block; transform: skewX(-10deg); margin-left: 2px; }
+  .welcome { font-weight: 700; font-size: 15px; }
+
+  /* ---------- Main Tabs ---------- */
+  .main-tabs { background: #0f172a; display: flex; border-bottom: 1px solid #1e293b; }
+  .main-tab {
+    padding: 12px 22px; color: #d1d5db; font-weight: 700;
+    letter-spacing: 1px; font-size: 13px; cursor: pointer;
+    border: none; background: transparent; text-transform: uppercase;
+  }
+  .main-tab.active { background: var(--red); color: #fff; }
+  .main-tab:hover:not(.active) { background: #1e293b; color: #fff; }
+
+  /* ---------- Sub Tabs ---------- */
+  .sub-tabs {
+    display: flex; border-bottom: 1px solid var(--border);
+    padding: 0 14px; background: #fff;
+  }
+  .sub-tab {
+    padding: 10px 16px; cursor: pointer; color: var(--muted);
+    font-weight: 600; border: none; background: transparent;
+    font-size: 13px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .sub-tab.active { color: var(--red); border-bottom-color: var(--red); }
+  .sub-tab:hover:not(.active) { color: #111827; }
+  .sub-tabs:empty { display: none; }
+
+  /* ---------- Content area ---------- */
+  .content { padding: 16px 18px 80px; }
+  .page-title {
+    font-size: 16px; font-weight: 600;
+    border-bottom: 1px solid var(--red);
+    display: inline-block; padding-bottom: 6px; margin-bottom: 14px;
+  }
+  .breadcrumbs {
+    font-size: 13px; color: var(--red); font-weight: 700;
+    margin-bottom: 12px; display: flex; align-items: center;
+    gap: 6px; flex-wrap: wrap;
+  }
+  .breadcrumbs .crumb { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+  .breadcrumbs .crumb:hover { text-decoration: underline; }
+  .breadcrumbs .sep { color: #9ca3af; }
+
+  .folder-icon {
+    width: 18px; height: 14px; display: inline-block;
+    background: var(--folder); border-radius: 2px 4px 4px 4px; position: relative;
+  }
+  .folder-icon::before {
+    content: ""; position: absolute; top: -4px; left: 0; width: 8px; height: 4px;
+    background: var(--folder); border-radius: 2px 2px 0 0;
+  }
+  .folder-icon::after {
+    content: ""; position: absolute; inset: 0;
+    border: 1px solid var(--folder-dark); border-radius: 2px 4px 4px 4px;
+  }
+
+  /* ---------- Form row ---------- */
+  .form-row {
+    display: flex; align-items: center; gap: 10px;
+    margin: 10px 0 14px; flex-wrap: wrap;
+  }
+  .form-row label { font-size: 13px; color: #374151; }
+  select, input[type="text"], input[type="file"] {
+    padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px;
+    font-size: 13px; background: #fff; min-width: 110px;
+  }
+  .btn {
+    padding: 7px 14px; border: 1px solid var(--red);
+    background: var(--red); color: #fff; border-radius: 4px;
+    font-weight: 600; cursor: pointer; font-size: 13px;
+    transition: background .15s ease;
+  }
+  .btn:hover { background: var(--red-dark); border-color: var(--red-dark); }
+  .btn.outline { background: #fff; color: var(--red); }
+  .btn.outline:hover { background: #fee2e2; }
+  .btn.gray { background: #f3f4f6; color: #374151; border-color: #d1d5db; }
+  .btn.gray:hover { background: #e5e7eb; }
+
+  /* ---------- Empty state ---------- */
+  .empty { color: #9ca3af; font-size: 13px; padding: 6px 0; }
+
+  /* ---------- Folder grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 14px; margin-top: 8px;
+  }
+  .folder-card {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 14px 8px; border: 1px solid var(--border);
+    border-radius: 6px; background: #fff; cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    position: relative;
+  }
+  .folder-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,.07); border-color: #fca5a5;
+  }
+  .folder-card .big-folder {
+    width: 56px; height: 42px; background: var(--folder);
+    position: relative; border-radius: 2px 8px 8px 8px; margin-bottom: 8px;
+  }
+  .folder-card .big-folder::before {
+    content: ""; position: absolute; top: -8px; left: 0; width: 22px; height: 10px;
+    background: var(--folder); border-radius: 4px 4px 0 0;
+  }
+  .folder-card .big-folder::after {
+    content: ""; position: absolute; inset: 0;
+    border: 1px solid var(--folder-dark); border-radius: 2px 8px 8px 8px;
+  }
+  .folder-card .name { font-weight: 700; color: #111827; font-size: 14px; text-align:center; }
+  .folder-card .meta { color: #6b7280; font-size: 11px; margin-top: 2px; }
+  .folder-card .del {
+    position: absolute; top: 4px; right: 6px;
+    background: transparent; border: none; color: #9ca3af;
+    cursor: pointer; font-size: 16px; line-height: 1;
+  }
+  .folder-card .del:hover { color: var(--red); }
+
+  /* ---------- Photo grid ---------- */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px; margin-top: 10px;
+  }
+  .photo-card {
+    position: relative; border: 1px solid var(--border);
+    border-radius: 6px; overflow: hidden; background: #f3f4f6;
+    aspect-ratio: 1 / 1;
+  }
+  .photo-card img {
+    width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in;
+  }
+  .photo-card .pdel {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(0,0,0,.55); color: #fff; border: none;
+    width: 24px; height: 24px; border-radius: 50%;
+    cursor: pointer; font-size: 14px; line-height: 1;
+  }
+  .photo-card .pdel:hover { background: var(--red); }
+  .photo-card .cap {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,.75), transparent);
+    color: #fff; font-size: 11px; padding: 18px 8px 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(0,0,0,.85);
+    display: none; align-items: center; justify-content: center;
+    z-index: 100; padding: 20px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 95%; max-height: 90%; border-radius: 6px; }
+  .lightbox .close {
+    position: absolute; top: 14px; right: 18px;
+    background: transparent; border: none; color: #fff;
+    font-size: 30px; cursor: pointer;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #111827; color: #fff;
+    padding: 10px 18px; border-radius: 999px; font-size: 13px;
+    opacity: 0; transition: all .25s ease; z-index: 200;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 480px) {
+    .topbar { padding: 12px 12px; gap: 12px; }
+    .logo { font-size: 22px; }
+    .welcome { font-size: 13px; }
+    .main-tab { padding: 10px 16px; }
+    select, input[type="text"] { min-width: 90px; font-size: 12px; }
+  }
+</style>
+<style type="text/css">* {user-select: auto !important; -webkit-user-select: auto !important;}</style><input type="hidden" id="inject_idm_text_selection"></head>
+<body>
+
+<!-- ========== Header ========== -->
+<header class="topbar">
+  <div class="logo">BEVERAGE<span class="num">2</span></div>
+  <div class="welcome">Welcome Bev2 Jakarta Barat</div>
+</header>
+
+<!-- ========== Main Tabs ========== -->
+<nav class="main-tabs" role="tablist">
+  <button class="main-tab active" data-main="laporan">LAPORAN</button>
+  <button class="main-tab" data-main="branding">BRANDING</button>
+</nav>
+
+<!-- ========== Sub Tabs ========== -->
+<nav class="sub-tabs" id="subTabs" role="tablist"><button class="sub-tab active" data-sub="OKM">OKM</button><button class="sub-tab " data-sub="ORM">ORM</button></nav>
+
+<!-- ========== Content ========== -->
+<main class="content" id="content">
+      <div class="page-title">Laporan OKM — Foto</div>
+      <div class="breadcrumbs">
+    
+      <span class="crumb" data-bc="0"><span class="folder-icon"></span>OKM</span>
+      
+    
+  </div>
+      <div class="form-row">
+        <label for="yearSel">Buat folder tahun:</label>
+        <select id="yearSel">
+          <option value="">Pilih tahun...</option>
+          <option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option>
+        </select>
+        <button class="btn" id="createYearBtn">Buat Folder</button>
+      </div>
+      <div class="empty">Belum ada folder. Buat folder di atas.</div>
+    </main>
+
+<!-- ========== Lightbox ========== -->
+<div class="lightbox" id="lightbox">
+  <button class="close" id="lightboxClose">×</button>
+  <img id="lightboxImg" alt="Foto">
+</div>
+
+<!-- ========== Toast ========== -->
+<div class="toast" id="toast">Folder 2026 dihapus</div>
+
+<script>
+/* ============================================================
+   BEVERAGE 2 — Static Single File App (v2)
+   - LocalStorage based
+   - Folder hierarchy: Category > Year > Month > Date > Photos
+   - LAPORAN: OKM | ORM   |   BRANDING: (no sub-tab)
+   ============================================================ */
+
+const STORE_KEY = "bev2_store_v2";
+
+const CATEGORIES = {
+  laporan: {
+    label: "LAPORAN",
+    subs: [
+      { key: "OKM", label: "OKM", title: "Laporan OKM \u2014 Foto" },
+      { key: "ORM", label: "ORM", title: "Laporan ORM \u2014 Foto" }
+    ]
+  },
+  branding: {
+    label: "BRANDING",
+    // no sub tabs — single category
+    subs: [
+      { key: "BRANDING", label: "", title: "Branding \u2014 Foto" }
+    ]
+  }
+};
+
+const MONTH_NAMES = [
+  "Januari","Februari","Maret","April","Mei","Juni",
+  "Juli","Agustus","September","Oktober","November","Desember"
+];
+
+/* state: navigation path */
+let state = {
+  mainTab: "laporan",
+  subTab: "OKM",
+  year: null,   // selected year
+  month: null,  // selected month
+  date: null,   // 1..31
+};
+
+/* ----- Storage helpers ----- */
+function loadStore() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return seedStore();
+    return JSON.parse(raw);
+  } catch (e) { return seedStore(); }
+}
+function seedStore() {
+  const empty = {};
+  ["OKM","ORM","BRANDING"].forEach(k => empty[k] = {});
+  // structure: store[cat][year][month][date] = [{id,name,data}]
+  localStorage.setItem(STORE_KEY, JSON.stringify(empty));
+  return empty;
+}
+function saveStore(s) { localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
+let store = loadStore();
+
+/* ----- Toast ----- */
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => t.classList.remove("show"), 1800);
+}
+
+/* ----- Helpers ----- */
+function pad(n) { return String(n).padStart(2, "0"); }
+function monthLabel(m) { return MONTH_NAMES[m-1] || ""; }
+function daysInMonth(year, month) {
+  return new Date(parseInt(year,10), month, 0).getDate(); // month: 1..12
+}
+function currentTitle() {
+  return CATEGORIES[state.mainTab].subs.find(s => s.key === state.subTab).title;
+}
+function catNode() {
+  if (!store[state.subTab]) store[state.subTab] = {};
+  return store[state.subTab];
+}
+
+/* ----- Year/Month/Date dropdown options ----- */
+function yearChoices() {
+  const now = new Date().getFullYear();
+  const set = new Set();
+  for (let y = now; y >= now - 6; y--) set.add(String(y));
+  Object.keys(catNode()).forEach(y => set.add(y));
+  return [...set].sort((a,b)=> b.localeCompare(a));
+}
+
+/* ----- Rendering ----- */
+function renderSubTabs() {
+  const wrap = document.getElementById("subTabs");
+  const subs = CATEGORIES[state.mainTab].subs;
+  // hide if only one with empty label
+  if (subs.length === 1 && !subs[0].label) {
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.innerHTML = subs.map(s =>
+    `<button class="sub-tab ${state.subTab===s.key?"active":""}" data-sub="${s.key}">${s.label}</button>`
+  ).join("");
+  wrap.querySelectorAll(".sub-tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.subTab = btn.dataset.sub;
+      state.year = state.month = state.date = null;
+      render();
+    });
+  });
+}
+
+function renderBreadcrumbs() {
+  const cat = state.subTab;
+  const parts = [];
+  parts.push({ label: cat === "BRANDING" ? "BRANDING" : cat, onClick: () => { state.year=state.month=state.date=null; render(); }});
+  if (state.year)  parts.push({ label: state.year,  onClick: () => { state.month=state.date=null; render(); }});
+  if (state.month) parts.push({ label: monthLabel(state.month), onClick: () => { state.date=null; render(); }});
+  if (state.date)  parts.push({ label: pad(state.date), onClick: () => {} });
+
+  return `<div class="breadcrumbs">
+    ${parts.map((p,i) => `
+      <span class="crumb" data-bc="${i}"><span class="folder-icon"></span>${p.label}</span>
+      ${i < parts.length-1 ? `<span class="sep">/</span>` : ``}
+    `).join("")}
+  </div>`;
+}
+
+function bindBreadcrumbs(handlers) {
+  document.querySelectorAll("[data-bc]").forEach(el => {
+    const i = parseInt(el.dataset.bc, 10);
+    el.addEventListener("click", handlers[i] || (()=>{}));
+  });
+}
+
+function renderContent() {
+  const main = document.getElementById("content");
+  const title = currentTitle();
+
+  // ===== Level: Year (root) =====
+  if (state.year === null) {
+    const years = Object.keys(catNode()).sort((a,b)=> b.localeCompare(a));
+    const available = yearChoices().filter(y => !years.includes(y))
+      .map(y => `<option value="${y}">${y}</option>`).join("");
+
+    main.innerHTML = `
+      <div class="page-title">${title}</div>
+      ${renderBreadcrumbs()}
+      <div class="form-row">
+        <label for="yearSel">Buat folder tahun:</label>
+        <select id="yearSel">
+          <option value="">Pilih tahun...</option>
+          ${available}
+        </select>
+        <button class="btn" id="createYearBtn">Buat Folder</button>
+      </div>
+      ${years.length === 0
+        ? `<div class="empty">Belum ada folder. Buat folder di atas.</div>`
+        : `<div class="grid">
+            ${years.map(y => {
+              const totalPhotos = countPhotosInYear(y);
+              return `
+                <div class="folder-card" data-year="${y}">
+                  <button class="del" title="Hapus folder" data-del-year="${y}">&times;</button>
+                  <div class="big-folder"></div>
+                  <div class="name">${y}</div>
+                  <div class="meta">${totalPhotos} foto</div>
+                </div>`;
+            }).join("")}
+          </div>`
+      }
+    `;
+
+    document.getElementById("createYearBtn").addEventListener("click", () => {
+      const y = document.getElementById("yearSel").value;
+      if (!y) { toast("Pilih tahun terlebih dahulu"); return; }
+      if (catNode()[y]) { toast("Folder tahun sudah ada"); return; }
+      catNode()[y] = {};
+      saveStore(store);
+      toast(`Folder tahun ${y} dibuat`);
+      render();
+    });
+    main.querySelectorAll(".folder-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if (e.target.dataset.delYear) return;
+        state.year = card.dataset.year;
+        render();
+      });
+    });
+    main.querySelectorAll("[data-del-year]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const y = btn.dataset.delYear;
+        if (confirm(`Hapus folder ${y} dan seluruh isinya?`)) {
+          delete catNode()[y]; saveStore(store);
+          toast(`Folder ${y} dihapus`); render();
+        }
+      });
+    });
+    bindBreadcrumbs([() => {}]);
+    return;
+  }
+
+  // ===== Level: Month =====
+  if (state.month === null) {
+    const yearObj = catNode()[state.year] || {};
+    const months = Object.keys(yearObj).map(Number).sort((a,b)=> a-b);
+    const available = [];
+    for (let m=1; m<=12; m++) if (!months.includes(m)) available.push(m);
+
+    main.innerHTML = `
+      <div class="page-title">${title}</div>
+      ${renderBreadcrumbs()}
+      <div class="form-row">
+        <button class="btn gray" id="backBtn">&larr; Kembali</button>
+        <label for="monthSel">Buat folder bulan:</label>
+        <select id="monthSel">
+          <option value="">Pilih bulan...</option>
+          ${available.map(m => `<option value="${m}">${pad(m)} - ${monthLabel(m)}</option>`).join("")}
+        </select>
+        <button class="btn" id="createMonthBtn">Buat Folder</button>
+      </div>
+      ${months.length === 0
+        ? `<div class="empty">Belum ada folder bulan. Buat folder di atas.</div>`
+        : `<div class="grid">
+            ${months.map(m => {
+              const totalPhotos = countPhotosInMonth(state.year, m);
+              return `
+                <div class="folder-card" data-month="${m}">
+                  <button class="del" title="Hapus folder" data-del-month="${m}">&times;</button>
+                  <div class="big-folder"></div>
+                  <div class="name">${pad(m)} - ${monthLabel(m)}</div>
+                  <div class="meta">${totalPhotos} foto</div>
+                </div>`;
+            }).join("")}
+          </div>`
+      }
+    `;
+
+    document.getElementById("backBtn").addEventListener("click", () => { state.year=null; render(); });
+    document.getElementById("createMonthBtn").addEventListener("click", () => {
+      const m = parseInt(document.getElementById("monthSel").value, 10);
+      if (!m) { toast("Pilih bulan terlebih dahulu"); return; }
+      if (!catNode()[state.year]) catNode()[state.year] = {};
+      if (catNode()[state.year][m]) { toast("Folder bulan sudah ada"); return; }
+      catNode()[state.year][m] = {};
+      saveStore(store);
+      toast(`Folder bulan ${monthLabel(m)} dibuat`);
+      render();
+    });
+    main.querySelectorAll(".folder-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if (e.target.dataset.delMonth) return;
+        state.month = parseInt(card.dataset.month, 10);
+        render();
+      });
+    });
+    main.querySelectorAll("[data-del-month]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const m = parseInt(btn.dataset.delMonth, 10);
+        if (confirm(`Hapus folder bulan ${monthLabel(m)} dan seluruh isinya?`)) {
+          delete catNode()[state.year][m]; saveStore(store);
+          toast(`Folder bulan ${monthLabel(m)} dihapus`); render();
+        }
+      });
+    });
+    bindBreadcrumbs([
+      () => { state.year=state.month=state.date=null; render(); },
+      () => {}
+    ]);
+    return;
+  }
+
+  // ===== Level: Date =====
+  if (state.date === null) {
+    const monthObj = (catNode()[state.year] && catNode()[state.year][state.month]) || {};
+    const dates = Object.keys(monthObj).map(Number).sort((a,b)=> a-b);
+    const maxDay = daysInMonth(state.year, state.month);
+    const available = [];
+    for (let d=1; d<=maxDay; d++) if (!dates.includes(d)) available.push(d);
+
+    main.innerHTML = `
+      <div class="page-title">${title}</div>
+      ${renderBreadcrumbs()}
+      <div class="form-row">
+        <button class="btn gray" id="backBtn">&larr; Kembali</button>
+        <label for="dateSel">Buat folder tanggal:</label>
+        <select id="dateSel">
+          <option value="">Pilih tanggal...</option>
+          ${available.map(d => `<option value="${d}">${pad(d)}</option>`).join("")}
+        </select>
+        <button class="btn" id="createDateBtn">Buat Folder</button>
+      </div>
+      ${dates.length === 0
+        ? `<div class="empty">Belum ada folder tanggal. Buat folder di atas.</div>`
+        : `<div class="grid">
+            ${dates.map(d => {
+              const arr = monthObj[d] || [];
+              return `
+                <div class="folder-card" data-date="${d}">
+                  <button class="del" title="Hapus folder" data-del-date="${d}">&times;</button>
+                  <div class="big-folder"></div>
+                  <div class="name">${pad(d)} ${monthLabel(state.month)} ${state.year}</div>
+                  <div class="meta">${arr.length} foto</div>
+                </div>`;
+            }).join("")}
+          </div>`
+      }
+    `;
+
+    document.getElementById("backBtn").addEventListener("click", () => { state.month=null; render(); });
+    document.getElementById("createDateBtn").addEventListener("click", () => {
+      const d = parseInt(document.getElementById("dateSel").value, 10);
+      if (!d) { toast("Pilih tanggal terlebih dahulu"); return; }
+      if (!catNode()[state.year][state.month]) catNode()[state.year][state.month] = {};
+      if (catNode()[state.year][state.month][d]) { toast("Folder tanggal sudah ada"); return; }
+      catNode()[state.year][state.month][d] = [];
+      saveStore(store);
+      toast(`Folder tanggal ${pad(d)} dibuat`);
+      render();
+    });
+    main.querySelectorAll(".folder-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if (e.target.dataset.delDate) return;
+        state.date = parseInt(card.dataset.date, 10);
+        render();
+      });
+    });
+    main.querySelectorAll("[data-del-date]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const d = parseInt(btn.dataset.delDate, 10);
+        if (confirm(`Hapus folder tanggal ${pad(d)} dan seluruh fotonya?`)) {
+          delete catNode()[state.year][state.month][d]; saveStore(store);
+          toast(`Folder tanggal ${pad(d)} dihapus`); render();
+        }
+      });
+    });
+    bindBreadcrumbs([
+      () => { state.year=state.month=state.date=null; render(); },
+      () => { state.month=state.date=null; render(); },
+      () => {}
+    ]);
+    return;
+  }
+
+  // ===== Level: Photos =====
+  const photos = (catNode()[state.year] && catNode()[state.year][state.month] && catNode()[state.year][state.month][state.date]) || [];
+  main.innerHTML = `
+    <div class="page-title">${title}</div>
+    ${renderBreadcrumbs()}
+    <div class="form-row">
+      <button class="btn gray" id="backBtn">&larr; Kembali</button>
+      <label for="fileInput" class="btn outline" style="cursor:pointer;">+ Tambah Foto</label>
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none;" />
+      <span style="color:#6b7280;font-size:12px;">${photos.length} foto tersimpan</span>
+    </div>
+    ${photos.length === 0
+      ? `<div class="empty">Belum ada foto. Klik "Tambah Foto" untuk mengunggah.</div>`
+      : `<div class="photo-grid">
+          ${photos.map(p => `
+            <div class="photo-card">
+              <img src="${p.data}" alt="${escapeHtml(p.name)}" data-zoom="${p.id}" />
+              <button class="pdel" data-del-photo="${p.id}" title="Hapus foto">&times;</button>
+              <div class="cap" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
+            </div>
+          `).join("")}
+        </div>`
+    }
+  `;
+
+  document.getElementById("backBtn").addEventListener("click", () => { state.date=null; render(); });
+  document.getElementById("fileInput").addEventListener("change", (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    let pending = files.length;
+    files.forEach(f => {
+      if (!f.type.startsWith("image/")) { pending--; return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (!catNode()[state.year]) catNode()[state.year] = {};
+        if (!catNode()[state.year][state.month]) catNode()[state.year][state.month] = {};
+        if (!catNode()[state.year][state.month][state.date]) catNode()[state.year][state.month][state.date] = [];
+        catNode()[state.year][state.month][state.date].push({
+          id: Date.now() + "_" + Math.random().toString(36).slice(2,7),
+          name: f.name,
+          data: reader.result
+        });
+        pending--;
+        if (pending <= 0) {
+          try { saveStore(store); } catch(err) { toast("Storage penuh, hapus beberapa foto"); }
+          toast(`${files.length} foto ditambahkan`);
+          render();
+        }
+      };
+      reader.onerror = () => { pending--; if (pending<=0) { saveStore(store); render(); } };
+      reader.readAsDataURL(f);
+    });
+  });
+  main.querySelectorAll("[data-del-photo]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.delPhoto;
+      if (confirm("Hapus foto ini?")) {
+        const arr = catNode()[state.year][state.month][state.date];
+        catNode()[state.year][state.month][state.date] = arr.filter(p => p.id !== id);
+        saveStore(store); toast("Foto dihapus"); render();
+      }
+    });
+  });
+  main.querySelectorAll("[data-zoom]").forEach(img => {
+    img.addEventListener("click", () => {
+      const lb = document.getElementById("lightbox");
+      document.getElementById("lightboxImg").src = img.src;
+      lb.classList.add("open");
+    });
+  });
+
+  bindBreadcrumbs([
+    () => { state.year=state.month=state.date=null; render(); },
+    () => { state.month=state.date=null; render(); },
+    () => { state.date=null; render(); },
+    () => {}
+  ]);
+}
+
+/* ----- Counters ----- */
+function countPhotosInMonth(year, month) {
+  const m = (catNode()[year] && catNode()[year][month]) || {};
+  return Object.values(m).reduce((acc, arr) => acc + (arr?.length || 0), 0);
+}
+function countPhotosInYear(year) {
+  const y = catNode()[year] || {};
+  return Object.keys(y).reduce((acc, m) => acc + countPhotosInMonth(year, m), 0);
+}
+
+/* ----- Misc ----- */
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function render() {
+  document.querySelectorAll(".main-tab").forEach(b => {
+    b.classList.toggle("active", b.dataset.main === state.mainTab);
+  });
+  renderSubTabs();
+  renderContent();
+}
+
+/* ----- Wire main tab ----- */
+document.querySelectorAll(".main-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.mainTab = btn.dataset.main;
+    state.subTab = CATEGORIES[state.mainTab].subs[0].key;
+    state.year = state.month = state.date = null;
+    render();
+  });
+});
+
+/* ----- Lightbox ----- */
+document.getElementById("lightboxClose").addEventListener("click", () => {
+  document.getElementById("lightbox").classList.remove("open");
+});
+document.getElementById("lightbox").addEventListener("click", (e) => {
+  if (e.target.id === "lightbox") e.target.classList.remove("open");
+});
+
+/* ----- First render ----- */
+render();
+</script>
+<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon="{&quot;version&quot;:&quot;2024.11.0&quot;,&quot;token&quot;:&quot;7f7b0fd8732c4326aae4b9d58d5c514a&quot;,&quot;server_timing&quot;:{&quot;name&quot;:{&quot;cfCacheStatus&quot;:true,&quot;cfEdge&quot;:true,&quot;cfExtPri&quot;:true,&quot;cfL4&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfSpeedBrain&quot;:true},&quot;location_startswith&quot;:null}}" crossorigin="anonymous"></script>
+
+
+</body></html>
